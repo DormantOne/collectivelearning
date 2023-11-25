@@ -22,7 +22,8 @@ const db = getFirestore(app);
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('data.txt')
+     // Call the initializeFirebase function after the DOM has loaded
+    initializeFirebase();fetch('data.txt')
         .then(response => response.text())
         .then(text => {
             const pairs = text.split('\n..\n').map(pair => pair.trim().split('\n').filter(line => line.trim() !== ''));
