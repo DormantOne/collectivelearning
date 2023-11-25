@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 feedbackElement.textContent = '';
                 generateQuestion();
-            }, 2000); // Adjust delay as needed
+            }, 1); // Adjust delay as needed
         }
 
         // Attach event listeners to team buttons
