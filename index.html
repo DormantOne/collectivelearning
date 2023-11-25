@@ -1,75 +1,32 @@
-document.addEventListener('DOMContentLoaded', function() {
-    fetch('data.txt')
-        .then(response => response.text())
-        .then(text => {
-            const pairs = text.split('\n..\n').map(pair => pair.trim().split('\n').filter(line => line.trim() !== ''));
-            startQuiz(pairs);
-        });
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+</head>
+<body>
+    <div id="quiz-container">
+        <div id="question"></div>
+        <input type="radio" id="option1" name="option">
+        <label for="option1" id="label1">Option 1</label><br>
+        <input type="radio" id="option2" name="option">
+        <label for="option2" id="label2">Option 2</label><br>
+        <button id="submit">Check Answer</button>
+        <div id="feedback"></div>
+    </div>
 
-    function startQuiz(pairs) {
-        const questionElement = document.getElementById('question');
-        const option1Radio = document.getElementById('option1');
-        const option2Radio = document.getElementById('option2');
-        const label1 = document.getElementById('label1');
-        const label2 = document.getElementById('label2');
-        const submitButton = document.getElementById('submit');
-        const feedbackElement = document.getElementById('feedback');
-        const tryAgainButton = document.createElement('button'); // Create a try again button
-        tryAgainButton.textContent = 'Try Again';
-        tryAgainButton.style.display = 'none'; // Initially hide the try again button
-        tryAgainButton.addEventListener('click', generateQuestion);
 
-        feedbackElement.insertAdjacentElement('afterend', tryAgainButton); // Add try again button after the feedback element
 
-        function generateQuestion() {
-            submitButton.disabled = false; 
-            tryAgainButton.style.display = 'none'; // Hide the try again button
+    <div id="team-options" style="display:none;">
+    <p>Select a team to score a point:</p>
+    <button class="team-button" data-team="Red">Red Team</button>
+    <button class="team-button" data-team="White">White Team</button>
+    <button class="team-button" data-team="Blue">Blue Team</button>
+    <button class="team-button" data-team="Crimson">Crimson Team</button>
+    </div>
 
-            const randomIndex = Math.floor(Math.random() * pairs.length);
-            const [firstOption, secondOption] = pairs[randomIndex];
-            const correctIndex = secondOption.includes('[better]') ? 1 : 0;
 
-            questionElement.textContent = `Which is better?`;
-            label1.textContent = firstOption.replace(' [better]', '');
-            label2.textContent = secondOption.replace(' [better]', '');
-            option1Radio.value = correctIndex === 0 ? 'correct' : 'incorrect';
-            option2Radio.value = correctIndex === 1 ? 'correct' : 'incorrect';
-            option1Radio.checked = false;
-            option2Radio.checked = false;
-            feedbackElement.textContent = '';
-        }
-
-        function checkAnswer() {
-            submitButton.disabled = true;
-
-            const selectedValue = option1Radio.checked ? option1Radio.value : option2Radio.value;
-            const isCorrect = selectedValue === 'correct';
-            if (isCorrect) {
-                feedbackElement.textContent = 'Correct!';
-                document.getElementById('team-options').style.display = 'block';
-            } else {
-                feedbackElement.textContent = 'Incorrect!';
-                tryAgainButton.style.display = 'block'; // Show the try again button
-            }
-        }
-
-        submitButton.addEventListener('click', checkAnswer);
-
-        function logForTeam(team) {
-            console.log(`Point scored for the ${team} team.`);
-            feedbackElement.textContent = `Scored for ${team} team!`;
-
-            document.getElementById('team-options').style.display = 'none';
-            feedbackElement.textContent = '';
-            generateQuestion();
-        }
-
-        document.querySelectorAll('.team-button').forEach(button => {
-            button.addEventListener('click', function() {
-                logForTeam(this.getAttribute('data-team'));
-            });
-        });
-
-        generateQuestion(); // Initial question
-    }
-});
+    <script src="script.js"></script>
+</body>
+</html>
