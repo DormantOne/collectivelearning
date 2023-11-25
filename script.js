@@ -1,62 +1,54 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // ... (previous code for fetching and parsing the text file)
+    fetch('data.txt')
+        .then(response => response.text())
+        .then(text => {
+            // Split the text file content into pairs
+            const pairs = text.split('\n..\n').map(pair => {
+                const terms = pair.trim().split('\n').filter(Boolean);
+                return terms.map(term => term.replace(' [better]', ''));
+            });
+            startQuiz(pairs);
+        });
 
     function startQuiz(pairs) {
-        // ... (previous setup code)
+        const questionElement = document.getElementById('question');
+        const option1Radio = document.getElementById('option1');
+        const option2Radio = document.getElementById('option2');
+        const label1 = document.getElementById('label1');
+        const label2 = document.getElementById('label2');
+        const submitButton = document.getElementById('submit');
+        const feedbackElement = document.getElementById('feedback');
+        let correctIndex;
+
+        submitButton.addEventListener('click', checkAnswer);
+
+        function generateQuestion() {
+            // Randomly select a pair and assign the terms to the radio buttons
+            const randomPair = pairs[Math.floor(Math.random() * pairs.length)];
+            correctIndex = randomPair.findIndex(term => term.includes('*')); // Assumes the correct term has an asterisk
+            const options = randomPair.map(term => term.replace('*', '')); // Removes the asterisk for display
+            
+            questionElement.textContent = "Which is the better term?";
+            label1.textContent = options[0];
+            option1Radio.value = options[0];
+            label2.textContent = options[1];
+            option2Radio.value = options[1];
+
+            // Clear previous selections and feedback
+            option1Radio.checked = false;
+            option2Radio.checked = false;
+            feedbackElement.textContent = '';
+        }
 
         function checkAnswer() {
-            const selectedOption = option1Radio.checked ? 'option1' : 'option2';
-            const isCorrect = selectedOption === correctAnswer;
-            feedbackElement.textContent = isCorrect ? 'Correct!' : 'Incorrect!';
-
-            if (isCorrect) {
-                // Show team options when the answer is correct
-                showTeamOptions();
-            } else {
-                // Generate a new question when the answer is incorrect
-                setTimeout(generateQuestion, 2000); // 2 seconds delay
-            }
+            // Determine which radio button was checked and provide feedback
+            const selectedOptionIndex = option1Radio.checked ? 0 : 1;
+            feedbackElement.textContent = selectedOptionIndex === correctIndex ? 'Correct!' : 'Incorrect!';
+            // Wait a moment before generating a new question
+            setTimeout(generateQuestion, 1000);
         }
 
-        function showTeamOptions() {
-            // Hide question and answer options
-            questionElement.style.display = 'none';
-            option1Radio.style.display = 'none';
-            label1.style.display = 'none';
-            option2Radio.style.display = 'none';
-            label2.style.display = 'none';
-            submitButton.style.display = 'none';
-
-            // Display team options (you can add this directly to your HTML if preferred)
-            const teamContainer = document.createElement('div');
-            const teams = ['Red', 'White', 'Blue', 'Crimson'];
-            teams.forEach(team => {
-                const teamButton = document.createElement('button');
-                teamButton.textContent = `Log for ${team} team`;
-                teamButton.onclick = function() {
-                    logForTeam(team);
-                    // Clean up team buttons
-                    teamContainer.remove();
-                    // Show question and answer options for the next question
-                    questionElement.style.display = 'block';
-                    option1Radio.style.display = 'block';
-                    label1.style.display = 'block';
-                    option2Radio.style.display = 'block';
-                    label2.style.display = 'block';
-                    submitButton.style.display = 'block';
-                    generateQuestion();
-                };
-                teamContainer.appendChild(teamButton);
-            });
-            document.body.appendChild(teamContainer);
-        }
-
-        function logForTeam(team) {
-            // Log the correct answer for the chosen team
-            console.log(`Correct answer logged for the ${team} team.`);
-            // TODO: Implement actual logging logic, e.g. sending to server or Firebase
-        }
-
-        generateQuestion(); // Initial question
+        // Generate the initial question
+        generateQuestion();
     }
 });
