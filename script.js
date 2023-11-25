@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('team-options').style.display = 'block';
             } else {
                 // Proceed to next question if incorrect
-                setTimeout(generateQuestion, 2000);
+                setTimeout(generateQuestion, 100);
             }
         }
 
