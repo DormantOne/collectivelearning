@@ -1,3 +1,25 @@
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAJsu36rCNyJG-d5RwGyhEK4P5N3LkXpBM",
+  authDomain: "collectivelearning-b4bb4.firebaseapp.com",
+  projectId: "collectivelearning-b4bb4",
+  storageBucket: "collectivelearning-b4bb4.appspot.com",
+  messagingSenderId: "9465764517",
+  appId: "1:9465764517:web:9d1cd2a4b8491a28cfcb4c",
+  measurementId: "G-LFGTGKHTKJ"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
 document.addEventListener('DOMContentLoaded', function() {
     fetch('data.txt')
         .then(response => response.text())
