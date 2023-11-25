@@ -60,16 +60,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         submitButton.addEventListener('click', checkAnswer);
 
+        function logForTeam(team) {
+            // Log the point for the selected team and show confirmation
+            console.log(`Point scored for the ${team} team.`);
+            feedbackElement.textContent = `Scored for ${team} team!`;
+
+            // Hide team options
+            document.getElementById('team-options').style.display = 'none';
+
+            // Wait a bit, then clear feedback and generate a new question
+            setTimeout(() => {
+                feedbackElement.textContent = '';
+                generateQuestion();
+            }, 2000); // Adjust delay as needed
+        }
+
+        window.logForTeam = logForTeam; // Make logForTeam available globally for button onclick
+
         generateQuestion(); // Initial question
-    }
-
-    function logForTeam(team) {
-        // Log the point for the selected team
-        console.log(`Point scored for the ${team} team.`);
-        // TODO: Implement actual logging logic, e.g., sending to server or Firebase
-
-        // Hide team options and proceed to next question
-        document.getElementById('team-options').style.display = 'none';
-        setTimeout(generateQuestion, 2000);
     }
 });
