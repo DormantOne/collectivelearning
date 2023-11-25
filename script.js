@@ -1,7 +1,9 @@
 
+// Import the necessary Firebase modules
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Your Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAJsu36rCNyJG-d5RwGyhEK4P5N3LkXpBM",
   authDomain: "collectivelearning-b4bb4.firebaseapp.com",
@@ -14,6 +16,12 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Get a Firestore instance
+const db = getFirestore(app);
+
+// Now, you can use 'db' to interact with Firestore
+
 
 document.addEventListener('DOMContentLoaded', function() {
     fetch('data.txt')
