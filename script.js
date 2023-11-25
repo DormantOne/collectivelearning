@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('data.txt')
         .then(response => response.text())
         .then(data => {
-            const pairs = data.split('\n..\n'); // Adjust based on your file's structure
+            const pairs = data.split('\n..\n'); // Splitting based on your file's structure
             startQuiz(pairs);
         });
 
@@ -20,17 +20,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function generateQuestion() {
             const randomIndex = Math.floor(Math.random() * pairs.length);
-            const pair = pairs[randomIndex].split('\n');
-            questionElement.textContent = `Which is better for ${pair[0]}?`;
-            label1.textContent = pair[0];
-            label2.textContent = pair[1].replace(' [better]', '');
-            correctAnswer = pair[1].includes('[better]') ? 'option2' : 'option1';
+            const [option1, option2] = pairs[randomIndex].split('\n');
+            questionElement.textContent = `Which is better for '${option1}'?`;
+            label1.textContent = option1;
+            label2.textContent = option2.replace(' [better]', '');
+            correctAnswer = option2.includes('[better]') ? 'option2' : 'option1';
+            clearSelection();
         }
 
         function checkAnswer() {
             const selectedOption = option1Radio.checked ? 'option1' : 'option2';
             feedbackElement.textContent = selectedOption === correctAnswer ? 'Correct!' : 'Incorrect!';
             generateQuestion(); // Generate next question
+        }
+
+        function clearSelection() {
+            option1Radio.checked = false;
+            option2Radio.checked = false;
         }
 
         generateQuestion(); // Initial question
