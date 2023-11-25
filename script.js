@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM fully loaded and parsed");
+
     // Initialize Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyAJsu36rCNyJG-d5RwGyhEK4P5N3LkXpBM",
@@ -11,16 +13,18 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     firebase.initializeApp(firebaseConfig);
     var db = firebase.firestore();
+    console.log("Firebase Initialized");
 
     fetch('data.txt')
         .then(response => response.text())
         .then(text => {
             const pairs = text.split('\n..\n').map(pair => pair.trim().split('\n').filter(line => line.trim() !== ''));
-            console.log(pairs); // Debug: Log the pairs to inspect their format
+            console.log("Pairs loaded:", pairs);
             startQuiz(pairs);
         });
 
     function startQuiz(pairs) {
+        console.log("Quiz started with pairs:", pairs);
         const questionElement = document.getElementById('question');
         const option1Radio = document.getElementById('option1');
         const option2Radio = document.getElementById('option2');
@@ -34,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const [firstOption, secondOption] = pairs[randomIndex];
             const correctIndex = secondOption.includes('[better]') ? 1 : 0;
 
+            console.log(`Generated question: ${firstOption} vs ${secondOption}`);
             questionElement.textContent = `Which is better?`;
             label1.textContent = firstOption.replace(' [better]', '');
             label2.textContent = secondOption.replace(' [better]', '');
@@ -47,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function checkAnswer() {
             const selectedValue = option1Radio.checked ? option1Radio.value : option2Radio.value;
             const isCorrect = selectedValue === 'correct';
+            console.log(`Answer selected: ${selectedValue}, Correct: ${isCorrect}`);
             feedbackElement.textContent = isCorrect ? 'Correct!' : 'Incorrect!';
 
             if (isCorrect) {
@@ -57,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function logForTeam(team) {
+            console.log(`Team button clicked: ${team}`);
             var teamRef = db.collection('teams').doc(team);
 
             teamRef.update({
@@ -66,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }).then(doc => {
                 if (doc.exists) {
                     var teamScore = doc.data().score;
+                    console.log(`Updated score for ${team}: ${teamScore}`);
                     document.getElementById('team-score').textContent = `Team ${team} Score: ${teamScore}`;
                     updateTotalScore();
                 }
@@ -92,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 querySnapshot.forEach(doc => {
                     totalScore += doc.data().score;
                 });
+                console.log(`Total Score updated: ${totalScore}`);
                 document.getElementById('total-score').textContent = `Total Score: ${totalScore}`;
             }).catch(error => {
                 console.error("Error retrieving total score:", error);
