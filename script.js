@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     fetch('data.txt')
         .then(response => response.text())
-        .then(data => {
-            const pairs = data.split('\n..\n'); // Splitting based on your file's structure
+        .then(text => {
+            const pairs = text.split('\n..\n').map(pair => pair.trim().split('\n'));
             startQuiz(pairs);
         });
 
@@ -16,29 +16,35 @@ document.addEventListener('DOMContentLoaded', function() {
         const feedbackElement = document.getElementById('feedback');
         let correctAnswer;
 
-        submitButton.addEventListener('click', checkAnswer);
-
         function generateQuestion() {
+            // Randomly select a pair and identify the correct answer
             const randomIndex = Math.floor(Math.random() * pairs.length);
-            const [option1, option2] = pairs[randomIndex].split('\n');
-            questionElement.textContent = `Which is better for '${option1}'?`;
-            label1.textContent = option1;
-            label2.textContent = option2.replace(' [better]', '');
-            correctAnswer = option2.includes('[better]') ? 'option2' : 'option1';
-            clearSelection();
+            const [incorrect, correct] = pairs[randomIndex];
+            correctAnswer = correct.includes('[better]') ? 'option2' : 'option1';
+
+            // Update the question text and labels
+            questionElement.textContent = `Which is better?`;
+            label1.textContent = incorrect;
+            option1Radio.value = incorrect;
+            label2.textContent = correct.replace(' [better]', '');
+            option2Radio.value = label2.textContent;
+
+            // Clear previous selections and feedback
+            option1Radio.checked = false;
+            option2Radio.checked = false;
+            feedbackElement.textContent = '';
         }
 
         function checkAnswer() {
+            // Check if the selected answer is correct
             const selectedOption = option1Radio.checked ? 'option1' : 'option2';
             feedbackElement.textContent = selectedOption === correctAnswer ? 'Correct!' : 'Incorrect!';
-            generateQuestion(); // Generate next question
         }
 
-        function clearSelection() {
-            option1Radio.checked = false;
-            option2Radio.checked = false;
-        }
+        // Attach the checkAnswer function to the submit button
+        submitButton.addEventListener('click', checkAnswer);
 
-        generateQuestion(); // Initial question
+        // Generate the first question
+        generateQuestion();
     }
 });
