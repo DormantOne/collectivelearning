@@ -1,50 +1,62 @@
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('data.txt')
-        .then(response => response.text())
-        .then(text => {
-            const pairs = text.split('\n..\n').map(pair => pair.trim().split('\n'));
-            startQuiz(pairs);
-        });
+    // ... (previous code for fetching and parsing the text file)
 
     function startQuiz(pairs) {
-        const questionElement = document.getElementById('question');
-        const option1Radio = document.getElementById('option1');
-        const option2Radio = document.getElementById('option2');
-        const label1 = document.getElementById('label1');
-        const label2 = document.getElementById('label2');
-        const submitButton = document.getElementById('submit');
-        const feedbackElement = document.getElementById('feedback');
-        let correctAnswer;
-
-        function generateQuestion() {
-            // Randomly select a pair and identify the correct answer
-            const randomIndex = Math.floor(Math.random() * pairs.length);
-            const [incorrect, correct] = pairs[randomIndex];
-            correctAnswer = correct.includes('[better]') ? 'option2' : 'option1';
-
-            // Update the question text and labels
-            questionElement.textContent = `Which is better?`;
-            label1.textContent = incorrect;
-            option1Radio.value = incorrect;
-            label2.textContent = correct.replace(' [better]', '');
-            option2Radio.value = label2.textContent;
-
-            // Clear previous selections and feedback
-            option1Radio.checked = false;
-            option2Radio.checked = false;
-            feedbackElement.textContent = '';
-        }
+        // ... (previous setup code)
 
         function checkAnswer() {
-            // Check if the selected answer is correct
             const selectedOption = option1Radio.checked ? 'option1' : 'option2';
-            feedbackElement.textContent = selectedOption === correctAnswer ? 'Correct!' : 'Incorrect!';
+            const isCorrect = selectedOption === correctAnswer;
+            feedbackElement.textContent = isCorrect ? 'Correct!' : 'Incorrect!';
+
+            if (isCorrect) {
+                // Show team options when the answer is correct
+                showTeamOptions();
+            } else {
+                // Generate a new question when the answer is incorrect
+                setTimeout(generateQuestion, 2000); // 2 seconds delay
+            }
         }
 
-        // Attach the checkAnswer function to the submit button
-        submitButton.addEventListener('click', checkAnswer);
+        function showTeamOptions() {
+            // Hide question and answer options
+            questionElement.style.display = 'none';
+            option1Radio.style.display = 'none';
+            label1.style.display = 'none';
+            option2Radio.style.display = 'none';
+            label2.style.display = 'none';
+            submitButton.style.display = 'none';
 
-        // Generate the first question
-        generateQuestion();
+            // Display team options (you can add this directly to your HTML if preferred)
+            const teamContainer = document.createElement('div');
+            const teams = ['Red', 'White', 'Blue', 'Crimson'];
+            teams.forEach(team => {
+                const teamButton = document.createElement('button');
+                teamButton.textContent = `Log for ${team} team`;
+                teamButton.onclick = function() {
+                    logForTeam(team);
+                    // Clean up team buttons
+                    teamContainer.remove();
+                    // Show question and answer options for the next question
+                    questionElement.style.display = 'block';
+                    option1Radio.style.display = 'block';
+                    label1.style.display = 'block';
+                    option2Radio.style.display = 'block';
+                    label2.style.display = 'block';
+                    submitButton.style.display = 'block';
+                    generateQuestion();
+                };
+                teamContainer.appendChild(teamButton);
+            });
+            document.body.appendChild(teamContainer);
+        }
+
+        function logForTeam(team) {
+            // Log the correct answer for the chosen team
+            console.log(`Correct answer logged for the ${team} team.`);
+            // TODO: Implement actual logging logic, e.g. sending to server or Firebase
+        }
+
+        generateQuestion(); // Initial question
     }
 });
