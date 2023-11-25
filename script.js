@@ -1,30 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM fully loaded and parsed");
-
-    // Initialize Firebase
-    const firebaseConfig = {
-        apiKey: "AIzaSyAJsu36rCNyJG-d5RwGyhEK4P5N3LkXpBM",
-        authDomain: "collectivelearning-b4bb4.firebaseapp.com",
-        projectId: "collectivelearning-b4bb4",
-        storageBucket: "collectivelearning-b4bb4.appspot.com",
-        messagingSenderId: "9465764517",
-        appId: "1:9465764517:web:9d1cd2a4b8491a28cfcb4c",
-        measurementId: "G-LFGTGKHTKJ"
-    };
-    firebase.initializeApp(firebaseConfig);
-    var db = firebase.firestore();
-    console.log("Firebase Initialized");
-
     fetch('data.txt')
         .then(response => response.text())
         .then(text => {
-            const pairs = text.split('\n..\n').map(pair => pair.trim().split('\n').filter(line => line.trim() !== ''));
-            console.log("Pairs loaded:", pairs);
+            // Split the text into pairs and remove empty lines
+            const pairs = text.split('\n..\n').map(pair => {
+                return pair.trim().split('\n').filter(line => line.trim() !== '');
+            });
+            console.log(pairs); // Debug: Log the pairs to inspect their format
             startQuiz(pairs);
         });
 
     function startQuiz(pairs) {
-        console.log("Quiz started with pairs:", pairs);
         const questionElement = document.getElementById('question');
         const option1Radio = document.getElementById('option1');
         const option2Radio = document.getElementById('option2');
@@ -36,77 +22,61 @@ document.addEventListener('DOMContentLoaded', function() {
         function generateQuestion() {
             const randomIndex = Math.floor(Math.random() * pairs.length);
             const [firstOption, secondOption] = pairs[randomIndex];
-            const correctIndex = secondOption.includes('[better]') ? 1 : 0;
 
-            console.log(`Generated question: ${firstOption} vs ${secondOption}`);
+            // Determine which option is marked as better
+            const correctIndex = secondOption.includes('[better]') ? 1 : 0;
+            const correctOption = correctIndex === 1 ? secondOption : firstOption;
+
+            // Update the question and options
             questionElement.textContent = `Which is better?`;
             label1.textContent = firstOption.replace(' [better]', '');
             label2.textContent = secondOption.replace(' [better]', '');
+
+            // Store the correct answer in the value attribute of the radio buttons
             option1Radio.value = correctIndex === 0 ? 'correct' : 'incorrect';
             option2Radio.value = correctIndex === 1 ? 'correct' : 'incorrect';
+
+            // Reset any previous selection and feedback
             option1Radio.checked = false;
             option2Radio.checked = false;
             feedbackElement.textContent = '';
+
+            console.log(`Correct answer: ${correctOption}`); // Debug: Log the correct answer
         }
 
         function checkAnswer() {
             const selectedValue = option1Radio.checked ? option1Radio.value : option2Radio.value;
             const isCorrect = selectedValue === 'correct';
-            console.log(`Answer selected: ${selectedValue}, Correct: ${isCorrect}`);
             feedbackElement.textContent = isCorrect ? 'Correct!' : 'Incorrect!';
 
             if (isCorrect) {
+                // Show team selection if the answer is correct
                 document.getElementById('team-options').style.display = 'block';
             } else {
-                setTimeout(generateQuestion, 100);
+                // Proceed to next question if incorrect
+                setTimeout(generateQuestion, 2000);
             }
         }
 
+        submitButton.addEventListener('click', checkAnswer);
+
         function logForTeam(team) {
-            console.log(`Team button clicked: ${team}`);
-            var teamRef = db.collection('teams').doc(team);
+            // Log the point for the selected team and show confirmation
+            console.log(`Point scored for the ${team} team.`);
+            feedbackElement.textContent = `Scored for ${team} team!`;
 
-            teamRef.update({
-                score: firebase.firestore.FieldValue.increment(1)
-            }).then(() => {
-                return teamRef.get();
-            }).then(doc => {
-                if (doc.exists) {
-                    var teamScore = doc.data().score;
-                    console.log(`Updated score for ${team}: ${teamScore}`);
-                    document.getElementById('team-score').textContent = `Team ${team} Score: ${teamScore}`;
-                    updateTotalScore();
-                }
-            }).catch(error => {
-                console.error("Error updating score:", error);
-            });
-
+            // Hide team options
             document.getElementById('team-options').style.display = 'none';
+
+            // Wait a bit, then clear feedback and generate a new question
             setTimeout(() => {
                 feedbackElement.textContent = '';
                 generateQuestion();
-            }, 2000);
+            }, 2000); // Adjust delay as needed
         }
 
-        document.querySelectorAll('.team-button').forEach(button => {
-            button.addEventListener('click', function() {
-                logForTeam(this.getAttribute('data-team'));
-            });
-        });
+        window.logForTeam = logForTeam; // Make logForTeam available globally for button onclick
 
-        function updateTotalScore() {
-            db.collection('teams').get().then(querySnapshot => {
-                var totalScore = 0;
-                querySnapshot.forEach(doc => {
-                    totalScore += doc.data().score;
-                });
-                console.log(`Total Score updated: ${totalScore}`);
-                document.getElementById('total-score').textContent = `Total Score: ${totalScore}`;
-            }).catch(error => {
-                console.error("Error retrieving total score:", error);
-            });
-        }
-
-        generateQuestion();
+        generateQuestion(); // Initial question
     }
 });
