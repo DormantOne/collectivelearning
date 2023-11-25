@@ -2,33 +2,37 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('data.txt')
         .then(response => response.text())
         .then(data => {
-            const lines = data.split('\n..\n'); // Adjust based on your file's structure
-            startQuiz(lines);
+            const pairs = data.split('\n..\n'); // Adjust based on your file's structure
+            startQuiz(pairs);
         });
 
-    function startQuiz(lines) {
+    function startQuiz(pairs) {
         const questionElement = document.getElementById('question');
-        const option1Button = document.getElementById('option1');
-        const option2Button = document.getElementById('option2');
+        const option1Radio = document.getElementById('option1');
+        const option2Radio = document.getElementById('option2');
+        const label1 = document.getElementById('label1');
+        const label2 = document.getElementById('label2');
+        const submitButton = document.getElementById('submit');
         const feedbackElement = document.getElementById('feedback');
+        let correctAnswer;
 
-        option1Button.addEventListener('click', () => checkAnswer(0));
-        option2Button.addEventListener('click', () => checkAnswer(1));
+        submitButton.addEventListener('click', checkAnswer);
 
         function generateQuestion() {
-            const randomIndex = Math.floor(Math.random() * lines.length);
-            const pair = lines[randomIndex].split('\n');
-            questionElement.textContent = `What is the better term for ${pair[0]}?`;
-            option1Button.textContent = pair[0];
-            option2Button.textContent = pair[1].replace(' [better]', '');
-            return pair[1].includes('[better]');
+            const randomIndex = Math.floor(Math.random() * pairs.length);
+            const pair = pairs[randomIndex].split('\n');
+            questionElement.textContent = `Which is better for ${pair[0]}?`;
+            label1.textContent = pair[0];
+            label2.textContent = pair[1].replace(' [better]', '');
+            correctAnswer = pair[1].includes('[better]') ? 'option2' : 'option1';
         }
 
-        function checkAnswer(selectedOption) {
-            const isCorrect = generateQuestion();
-            feedbackElement.textContent = isCorrect === (selectedOption === 1) ? 'Correct!' : 'Incorrect!';
+        function checkAnswer() {
+            const selectedOption = option1Radio.checked ? 'option1' : 'option2';
+            feedbackElement.textContent = selectedOption === correctAnswer ? 'Correct!' : 'Incorrect!';
+            generateQuestion(); // Generate next question
         }
 
-        generateQuestion();
+        generateQuestion(); // Initial question
     }
 });
