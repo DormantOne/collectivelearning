@@ -1,7 +1,3 @@
-// Since you're using Firebase SDK v10.6.0, you need to import initializeApp and getFirestore
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
-import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
-
 // Your Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAJsu36rCNyJG-d5RwGyhEK4P5N3LkXpBM",
@@ -14,13 +10,14 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 
 // Get a Firestore instance
-const db = getFirestore(app);
-
+const db = firebase.firestore();
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Assuming you have a 'data.txt' file with quiz data
+    fetch('data.txt')
         .then(response => response.text())
         .then(text => {
             const pairs = text.split('\n..\n').map(pair => pair.trim().split('\n').filter(line => line.trim() !== ''));
