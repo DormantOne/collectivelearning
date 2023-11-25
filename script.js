@@ -1,5 +1,6 @@
-
-
+// Since you're using Firebase SDK v10.6.0, you need to import initializeApp and getFirestore
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
+import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
 // Your Firebase configuration
 const firebaseConfig = {
@@ -18,12 +19,8 @@ const app = initializeApp(firebaseConfig);
 // Get a Firestore instance
 const db = getFirestore(app);
 
-// Now, you can use 'db' to interact with Firestore
-
 
 document.addEventListener('DOMContentLoaded', function() {
-     // Call the initializeFirebase function after the DOM has loaded
-    initializeFirebase();fetch('data.txt')
         .then(response => response.text())
         .then(text => {
             const pairs = text.split('\n..\n').map(pair => pair.trim().split('\n').filter(line => line.trim() !== ''));
