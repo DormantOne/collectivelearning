@@ -2,11 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('data.txt')
         .then(response => response.text())
         .then(text => {
-            // Split the text into pairs and remove empty lines
-            const pairs = text.split('\n..\n').map(pair => {
-                return pair.trim().split('\n').filter(line => line.trim() !== '');
-            });
-            console.log(pairs); // Debug: Log the pairs to inspect their format
+            const pairs = text.split('\n..\n').map(pair => pair.trim().split('\n').filter(line => line.trim() !== ''));
             startQuiz(pairs);
         });
 
@@ -20,40 +16,32 @@ document.addEventListener('DOMContentLoaded', function() {
         const feedbackElement = document.getElementById('feedback');
 
         function generateQuestion() {
+            submitButton.disabled = false; // Enable the submit button for the new question
+
             const randomIndex = Math.floor(Math.random() * pairs.length);
             const [firstOption, secondOption] = pairs[randomIndex];
-
-            // Determine which option is marked as better
             const correctIndex = secondOption.includes('[better]') ? 1 : 0;
-            const correctOption = correctIndex === 1 ? secondOption : firstOption;
 
-            // Update the question and options
             questionElement.textContent = `Which is better?`;
             label1.textContent = firstOption.replace(' [better]', '');
             label2.textContent = secondOption.replace(' [better]', '');
-
-            // Store the correct answer in the value attribute of the radio buttons
             option1Radio.value = correctIndex === 0 ? 'correct' : 'incorrect';
             option2Radio.value = correctIndex === 1 ? 'correct' : 'incorrect';
-
-            // Reset any previous selection and feedback
             option1Radio.checked = false;
             option2Radio.checked = false;
             feedbackElement.textContent = '';
-
-            console.log(`Correct answer: ${correctOption}`); // Debug: Log the correct answer
         }
 
         function checkAnswer() {
+            submitButton.disabled = true; // Disable the submit button after an answer is selected
+
             const selectedValue = option1Radio.checked ? option1Radio.value : option2Radio.value;
             const isCorrect = selectedValue === 'correct';
             feedbackElement.textContent = isCorrect ? 'Correct!' : 'Incorrect!';
 
             if (isCorrect) {
-                // Show team selection if the answer is correct
                 document.getElementById('team-options').style.display = 'block';
             } else {
-                // Proceed to next question if incorrect
                 setTimeout(generateQuestion, 1);
             }
         }
@@ -61,21 +49,16 @@ document.addEventListener('DOMContentLoaded', function() {
         submitButton.addEventListener('click', checkAnswer);
 
         function logForTeam(team) {
-            // Log the point for the selected team and show confirmation
             console.log(`Point scored for the ${team} team.`);
             feedbackElement.textContent = `Scored for ${team} team!`;
 
-            // Hide team options
             document.getElementById('team-options').style.display = 'none';
 
-            // Wait a bit, then clear feedback and generate a new question
-            setTimeout(() => {
-                feedbackElement.textContent = '';
-                generateQuestion();
-            }, 1); // Adjust delay as needed
+            // Immediately clear feedback and generate a new question without delay
+            feedbackElement.textContent = '';
+            generateQuestion();
         }
 
-        // Attach event listeners to team buttons
         document.querySelectorAll('.team-button').forEach(button => {
             button.addEventListener('click', function() {
                 logForTeam(this.getAttribute('data-team'));
