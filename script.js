@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('team-options').style.display = 'block';
             } else {
                 // Proceed to next question if incorrect
-                setTimeout(generateQuestion, 2000);
+                setTimeout(generateQuestion, 100);
             }
         }
 
@@ -75,7 +75,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 2000); // Adjust delay as needed
         }
 
-        window.logForTeam = logForTeam; // Make logForTeam available globally for button onclick
+        // Attach event listeners to team buttons
+        document.querySelectorAll('.team-button').forEach(button => {
+            button.addEventListener('click', function() {
+                logForTeam(this.getAttribute('data-team'));
+            });
+        });
 
         generateQuestion(); // Initial question
     }
