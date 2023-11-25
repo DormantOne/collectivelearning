@@ -14,9 +14,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const label2 = document.getElementById('label2');
         const submitButton = document.getElementById('submit');
         const feedbackElement = document.getElementById('feedback');
+        const tryAgainButton = document.createElement('button'); // Create a try again button
+        tryAgainButton.textContent = 'Try Again';
+        tryAgainButton.style.display = 'none'; // Initially hide the try again button
+        tryAgainButton.addEventListener('click', generateQuestion);
+
+        feedbackElement.insertAdjacentElement('afterend', tryAgainButton); // Add try again button after the feedback element
 
         function generateQuestion() {
-            submitButton.disabled = false; // Enable the submit button for the new question
+            submitButton.disabled = false; 
+            tryAgainButton.style.display = 'none'; // Hide the try again button
 
             const randomIndex = Math.floor(Math.random() * pairs.length);
             const [firstOption, secondOption] = pairs[randomIndex];
@@ -33,16 +40,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function checkAnswer() {
-            submitButton.disabled = true; // Disable the submit button after an answer is selected
+            submitButton.disabled = true;
 
             const selectedValue = option1Radio.checked ? option1Radio.value : option2Radio.value;
             const isCorrect = selectedValue === 'correct';
-            feedbackElement.textContent = isCorrect ? 'Correct!' : 'Incorrect!';
-
             if (isCorrect) {
+                feedbackElement.textContent = 'Correct!';
                 document.getElementById('team-options').style.display = 'block';
             } else {
-                setTimeout(generateQuestion, 1);
+                feedbackElement.textContent = 'Incorrect!';
+                tryAgainButton.style.display = 'block'; // Show the try again button
             }
         }
 
@@ -53,8 +60,6 @@ document.addEventListener('DOMContentLoaded', function() {
             feedbackElement.textContent = `Scored for ${team} team!`;
 
             document.getElementById('team-options').style.display = 'none';
-
-            // Immediately clear feedback and generate a new question without delay
             feedbackElement.textContent = '';
             generateQuestion();
         }
