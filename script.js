@@ -1,7 +1,5 @@
 
-// Import the necessary Firebase modules
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+
 
 // Your Firebase configuration
 const firebaseConfig = {
