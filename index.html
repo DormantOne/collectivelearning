@@ -1,27 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Firebase SDK v10.6.0 -->
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+ <!-- Firebase SDK from CDN -->
+    <script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js"></script>
 
-        // Your Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAJsu36rCNyJG-d5RwGyhEK4P5N3LkXpBM",
-            authDomain: "collectivelearning-b4bb4.firebaseapp.com",
-            projectId: "collectivelearning-b4bb4",
-            storageBucket: "collectivelearning-b4bb4.appspot.com",
-            messagingSenderId: "9465764517",
-            appId: "1:9465764517:web:9d1cd2a4b8491a28cfcb4c",
-            measurementId: "G-LFGTGKHTKJ"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-    </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,7 +29,7 @@
         <button class="team-button" data-team="Crimson">Crimson Team</button>
     </div>
 
-    <!-- Include your script file -->
-    <script type="module" src="script.js"></script>
+    <!-- Your script file -->
+    <script src="script.js"></script>
 </body>
 </html>
