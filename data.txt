@@ -1,5 +1,5 @@
  CV: 4UPRBC, Norepi drip 
- Hemorrhagic shock [better]
+ Hemorrhagic shock rc'd 4 units prbc on norepi drip [better]
 ..
 
 Pulm: Continue Home O2
@@ -67,7 +67,7 @@ Sick Sinus Syndrome [better]
 ..
 
 CHF
-Combined (Systolic & Diastolic [better]
+Combined (Systolic & Diastolic) [better]
 ..
 
 Heart Failure and Renal Failure
@@ -89,7 +89,6 @@ hypertensive urgency without target orgen damage [better]
 soft pressures
 septic shock [better]
 ..
-
 
 cardiomyopathy
 hypertrophic cardiomyopathy [better]
