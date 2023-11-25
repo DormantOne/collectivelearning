@@ -46,13 +46,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function checkAnswer() {
             const selectedValue = option1Radio.checked ? option1Radio.value : option2Radio.value;
-            feedbackElement.textContent = selectedValue === 'correct' ? 'Correct!' : 'Incorrect!';
-            // Wait a bit before generating a new question
-            setTimeout(generateQuestion, 2000);
+            const isCorrect = selectedValue === 'correct';
+            feedbackElement.textContent = isCorrect ? 'Correct!' : 'Incorrect!';
+
+            if (isCorrect) {
+                // Show team selection if the answer is correct
+                document.getElementById('team-options').style.display = 'block';
+            } else {
+                // Proceed to next question if incorrect
+                setTimeout(generateQuestion, 2000);
+            }
         }
 
         submitButton.addEventListener('click', checkAnswer);
 
         generateQuestion(); // Initial question
+    }
+
+    function logForTeam(team) {
+        // Log the point for the selected team
+        console.log(`Point scored for the ${team} team.`);
+        // TODO: Implement actual logging logic, e.g., sending to server or Firebase
+
+        // Hide team options and proceed to next question
+        document.getElementById('team-options').style.display = 'none';
+        setTimeout(generateQuestion, 2000);
     }
 });
