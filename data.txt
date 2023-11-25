@@ -1,0 +1,113 @@
+ CV: 4UPRBC, Norepi drip 
+ Hemorrhagic shock [better]
+..
+
+Pulm: Continue Home O2
+Chronic respiratory failure, 3L O2 [better]
+..
+
+Altered Mental Status
+Acute hepatic encephalopathy [better]
+..
+
+Bedbound
+Functional Quadriplegia [better]
+..
+
+Delirium
+Acute derlirium due to sepsis [better]
+..
+
+Delayed
+Moderate intellectual disbility [better]
+..
+
+Dementia, needs a sittler
+Alzheimer's Dementia with behavioral disturbance due to psychosis [better]
+..
+
+Weakness, paressis
+Hemiparesis, right due to prior stroke [better]
+..
+
+Stroke
+acute embolic stroke with left hemiparesis [better]
+..
+
+Mood Disorder
+Schizophrenia [better]
+..
+
+Tobacco use disorder
+Nicotine dependende with withdrawal [better]
+..
+
+Cocaine use
+Cocaine abuse in remission [better]
+..
+
+ACS
+Type II MI due to septic shock [better]
+..
+
+ACS
+Type II MI due to a fib with RVR [better]
+..
+
+Troponin Leak
+Acue Myocardial Injury (+ trop without ischemia) [better]
+..
+
+Afib with RVR
+Paroxysmal atrial fibrillation with RVR [better]
+..
+
+Arrhythmia
+Sick Sinus Syndrome [better]
+..
+
+CHF
+Combined (Systolic & Diastolic [better]
+..
+
+Heart Failure and Renal Failure
+Cardiorenal syndrome [better]
+..
+
+Volume Overload
+Fluid overload due to acute systolic heart failure [better]
+..
+
+HTN
+Essential hypertension contributing to CKD, heart failure [better]
+..
+
+Uncontrolled hypertension
+hypertensive urgency without target orgen damage [better]
+..
+
+soft pressures
+septic shock [better]
+..
+
+
+cardiomyopathy
+hypertrophic cardiomyopathy [better]
+..
+
+valvular disease
+Chronic severe mitral regurgitation [better]
+..
+
+CAD
+CAD with stable angina [better]
+..
+
+COPD with Difficulty Breathing
+COPOD with Acute Exacerbation [better]
+..
+
+
+
+
+
