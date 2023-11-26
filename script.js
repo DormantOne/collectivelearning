@@ -98,6 +98,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
         submitButton.addEventListener('click', checkAnswer);
 
+      function updateScores() {
+    let totalScore = 0;
+
+    db.collection('teams').get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            const teamName = doc.id; // 'red', 'white', etc.
+            const teamScore = doc.data().score || 0;
+            totalScore += teamScore;
+
+            // Update individual team score in HTML
+            document.querySelector(`#score-${teamName} span`).textContent = teamScore;
+        });
+
+        // Update total score in HTML
+        document.querySelector('#total-score span').textContent = totalScore;
+    }).catch((error) => {
+        console.error("Error getting documents: ", error);
+    });
+}
+
+      
 function logForTeam(team) {
         // Convert team name to lowercase to match Firestore document IDs
     let teamLowerCase = team.toLowerCase();
@@ -131,6 +152,7 @@ function logForTeam(team) {
 
     document.getElementById('team-options').style.display = 'none';
     feedbackElement.textContent = '';
+    updateScores();
     generateQuestion();
 }
 
