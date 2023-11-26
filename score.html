@@ -40,6 +40,17 @@
             border-radius: 5px;
             text-decoration: none; /* Remove underline from links */
             cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow to create a raised effect */
+            transition: box-shadow 0.3s ease, transform 0.3s ease; /* Smooth transition for click effect */
+        }
+
+        .ensmarten-button:hover {
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* Slightly larger shadow on hover */
+        }
+
+        .ensmarten-button:active {
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Smaller shadow when button is clicked */
+            transform: translateY(2px); /* Slight move down to mimic button press */
         }
     </style>
 </head>
