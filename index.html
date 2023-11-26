@@ -1,23 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <!-- Firebase SDK from CDN -->
+    <!-- Firebase SDK from CDN -->
     <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
-
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz App</title>
+
+    <style>
+        #scores div {
+            margin-bottom: 5px; /* Adds a little space between each score line */
+        }
+
+        #score-red {
+            color: red;
+            font-weight: bold;
+        }
+
+        #score-white {
+            color: black; /* Adjust if you have a specific color for the white team */
+            font-weight: bold;
+        }
+
+        #score-blue {
+            color: blue;
+            font-weight: bold;
+        }
+
+        #score-crimson {
+            color: crimson;
+            font-weight: bold;
+        }
+
+        #total-score {
+            font-size: larger;
+            font-weight: bold;
+            margin-bottom: 20px; /* Space between the scores and the question */
+        }
+    </style>
 </head>
 <body>
-  <div id="scores">
-    <div id="score-red">Red Team: <span></span></div>
-    <div id="score-white">White Team: <span></span></div>
-    <div id="score-blue">Blue Team: <span></span></div>
-    <div id="score-crimson">Crimson Team: <span></span></div>
-    <div id="total-score">Total Score: <span></span></div>
-</div>
+    <div id="scores">
+        <div id="score-red">Red Team: <span></span></div>
+        <div id="score-white">White Team: <span></span></div>
+        <div id="score-blue">Blue Team: <span></span></div>
+        <div id="score-crimson">Crimson Team: <span></span></div>
+        <div id="total-score">Total Score: <span></span></div>
+    </div>
+
     <div id="quiz-container">
         <div id="question"></div>
         <input type="radio" id="option1" name="option">
@@ -35,9 +67,6 @@
         <button class="team-button" data-team="Blue">Blue Team</button>
         <button class="team-button" data-team="Crimson">Crimson Team</button>
     </div>
-
-
-
 
     <!-- Your script file -->
     <script src="script.js"></script>
