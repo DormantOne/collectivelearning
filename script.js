@@ -93,7 +93,7 @@ function generateQuestion() {
 }
 
     // Call updateScores here to populate initial scores
-    updateScores();
+    // updateScores();
       
         function checkAnswer() {
                 // Check if either of the options is selected
