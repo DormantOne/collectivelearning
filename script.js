@@ -16,7 +16,32 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Assuming you have a 'data.txt' file with quiz data
+   
+    // Fetch team names from button text
+    const teamButtons = document.querySelectorAll('.team-button');
+    const teamNames = Array.from(teamButtons).map(button => {
+        // Assuming button text is formatted like 'Red Team', 'White Team', etc.
+        return button.textContent.trim().split(' ')[0].toLowerCase(); // Converts 'Red Team' to 'red'
+    });
+
+    // Check and initialize Firestore data for each team
+    teamNames.forEach((teamName) => {
+        const teamScoreRef = db.collection('teams').doc(teamName);
+
+        teamScoreRef.get().then((doc) => {
+            if (!doc.exists || typeof doc.data().score === 'undefined') {
+                console.log(`No data found for ${teamName}, initializing score to 0.`);
+                return teamScoreRef.set({ score: 0 });
+            } else {
+                console.log(`Data exists for ${teamName}, score is:`, doc.data().score);
+                // Additional logic if data exists
+            }
+        }).catch((error) => {
+            console.error(`Error accessing Firestore for ${teamName}:`, error);
+        });
+    });  
+  
+  // Assuming you have a 'data.txt' file with quiz data
     fetch('data.txt')
         .then(response => response.text())
         .then(text => {
