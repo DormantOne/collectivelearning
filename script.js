@@ -64,23 +64,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
         feedbackElement.insertAdjacentElement('afterend', tryAgainButton); // Add try again button after the feedback element
 
-        function generateQuestion() {
-            submitButton.disabled = false; 
-            tryAgainButton.style.display = 'none'; // Hide the try again button
+function generateQuestion() {
+    submitButton.disabled = false; 
+    tryAgainButton.style.display = 'none'; // Hide the try again button
 
-            const randomIndex = Math.floor(Math.random() * pairs.length);
-            const [firstOption, secondOption] = pairs[randomIndex];
-            const correctIndex = secondOption.includes('[better]') ? 1 : 0;
+    const randomIndex = Math.floor(Math.random() * pairs.length);
+    const [firstOption, secondOption] = pairs[randomIndex];
+    const correctIndex = secondOption.includes('[better]') ? 1 : 0;
 
-            questionElement.textContent = `Which is better?`;
-            label1.textContent = firstOption.replace(' [better]', '');
-            label2.textContent = secondOption.replace(' [better]', '');
-            option1Radio.value = correctIndex === 0 ? 'correct' : 'incorrect';
-            option2Radio.value = correctIndex === 1 ? 'correct' : 'incorrect';
-            option1Radio.checked = false;
-            option2Radio.checked = false;
-            feedbackElement.textContent = '';
-        }
+    // Randomize the order of options
+    const isOption1First = Math.random() < 0.5; // Randomly decide the order of options
+
+    questionElement.textContent = `Which is better?`;
+    if (isOption1First) {
+        label1.textContent = firstOption.replace(' [better]', '');
+        label2.textContent = secondOption.replace(' [better]', '');
+        option1Radio.value = correctIndex === 0 ? 'correct' : 'incorrect';
+        option2Radio.value = correctIndex === 1 ? 'correct' : 'incorrect';
+    } else {
+        label1.textContent = secondOption.replace(' [better]', '');
+        label2.textContent = firstOption.replace(' [better]', '');
+        option1Radio.value = correctIndex === 1 ? 'correct' : 'incorrect';
+        option2Radio.value = correctIndex === 0 ? 'correct' : 'incorrect';
+    }
+    option1Radio.checked = false;
+    option2Radio.checked = false;
+    feedbackElement.textContent = '';
+}
+
 
         function checkAnswer() {
                 // Check if either of the options is selected
