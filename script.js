@@ -73,40 +73,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
         submitButton.addEventListener('click', checkAnswer);
 
+        function logForTeam(team) {
+            console.log(`Point scored for the ${team} team.`);
+            feedbackElement.textContent = `Scored for ${team} team!`;
 
- function logForTeam(team) {
-    console.log(`Point scored for the ${team} team.`);
-    feedbackElement.textContent = `Scored for ${team} team!`;
+            document.getElementById('team-options').style.display = 'none';
+            feedbackElement.textContent = '';
+            generateQuestion();
+        }
 
-    // Reference to the team's score in Firestore
-    const teamScoreRef = db.collection('teams').doc(team);
-
-    db.runTransaction((transaction) => {
-        return transaction.get(teamScoreRef).then((teamScoreDoc) => {
-            if (!teamScoreDoc.exists) {
-                throw "Document does not exist!";
-            }
-
-            // Calculate the new score
-            let newScore = (teamScoreDoc.data().score || 0) + 1;
-
-            // Set the new score
-            transaction.update(teamScoreRef, { score: newScore });
-
-            return newScore;
+        document.querySelectorAll('.team-button').forEach(button => {
+            button.addEventListener('click', function() {
+                logForTeam(this.getAttribute('data-team'));
+            });
         });
-    }).then((newScore) => {
-        console.log(`New score for the ${team} team is ${newScore}`);
-    }).catch((error) => {
-        console.log("Transaction failed: ", error);
-    });
 
-    document.getElementById('team-options').style.display = 'none';
-    feedbackElement.textContent = '';
-    generateQuestion();
-}
-
-
-      
-
+        generateQuestion(); // Initial question
+    }
 });
