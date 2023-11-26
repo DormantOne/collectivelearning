@@ -83,7 +83,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function checkAnswer() {
-            submitButton.disabled = true;
+                // Check if either of the options is selected
+    if (!option1Radio.checked && !option2Radio.checked) {
+        feedbackElement.textContent = 'Please select an option before submitting.';
+        return; // Exit the function if no option is selected
+    }
+          submitButton.disabled = true;
 
             const selectedValue = option1Radio.checked ? option1Radio.value : option2Radio.value;
             const isCorrect = selectedValue === 'correct';
