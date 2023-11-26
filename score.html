@@ -1,1 +1,36 @@
-score: 1000
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Score Bar</title>
+    <style>
+        .score-bar-container {
+            width: 100%; /* Container width */
+            background-color: #eee; /* Background of the container */
+            border: 1px solid #000; /* Border around the container */
+        }
+
+        .score-bar {
+            height: 20px; /* Height of the score bar */
+            background-color: #4CAF50; /* Color of the score bar */
+            width: 0%; /* Initial width of the score bar */
+        }
+    </style>
+</head>
+<body>
+    <div class="score-bar-container">
+        <div class="score-bar" id="scoreBar"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            let score = 500; // Example score
+            let maxScore = 1000;
+            let scorePercentage = (score / maxScore) * 100;
+
+            let scoreBar = document.getElementById('scoreBar');
+            scoreBar.style.width = scorePercentage + '%';
+        });
+    </script>
+</body>
+</html>
+
