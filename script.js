@@ -75,7 +75,7 @@ function generateQuestion() {
     // Randomize the order of options
     const isOption1First = Math.random() < 0.5; // Randomly decide the order of options
 
-    questionElement.textContent = `Which is better?`;
+    questionElement.textContent = `Choose the better documentation:`;
     if (isOption1First) {
         label1.textContent = firstOption.replace(' [better]', '');
         label2.textContent = secondOption.replace(' [better]', '');
