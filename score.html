@@ -13,7 +13,7 @@
 
         .score-bar {
             height: 15px; /* Smaller height of the score bar */
-            background-color: blue; /* Color of the score bar (leader: blue) */
+            background-color: blue; /* Color of the score bar */
             width: 0%; /* Initial width of the score bar */
         }
 
@@ -48,22 +48,55 @@
         <div class="score-bar" id="scoreBar"></div>
     </div>
     <div class="number-line">
-        1000 <!-- Only number 1000 at the end -->
+        100 <!-- Maximum score -->
     </div>
     <div class="score-display" id="scoreDisplay"></div>
     <a href="https://dormantone.github.io/collectivelearning/" target="_blank" class="ensmarten-button">Ensmarten</a>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            let score = 500; // Example score
-            let maxScore = 1000;
-            let scorePercentage = (score / maxScore) * 100;
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
 
+    <script>
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAJsu36rCNyJG-d5RwGyhEK4P5N3LkXpBM",
+            authDomain: "collectivelearning-b4bb4.firebaseapp.com",
+            projectId: "collectivelearning-b4bb4",
+            storageBucket: "collectivelearning-b4bb4.appspot.com",
+            messagingSenderId: "9465764517",
+            appId: "1:9465764517:web:9d1cd2a4b8491a28cfcb4c",
+            measurementId: "G-LFGTGKHTKJ"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Get a Firestore instance
+        const db = firebase.firestore();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const maxScore = 100; // Set maximum score
+            let totalScore = 0;
+
+            // Fetch total score from Firestore
+            db.collection('teams').get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    totalScore += doc.data().score || 0;
+                });
+
+                updateScoreBar(totalScore, maxScore);
+            });
+        });
+
+        function updateScoreBar(score, maxScore) {
+            let scorePercentage = (score / maxScore) * 100;
             let scoreBar = document.getElementById('scoreBar');
             let scoreDisplay = document.getElementById('scoreDisplay');
+
             scoreBar.style.width = scorePercentage + '%';
             scoreDisplay.textContent = 'Score: ' + score;
-        });
+        }
     </script>
 </body>
 </html>
