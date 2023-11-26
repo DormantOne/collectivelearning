@@ -99,11 +99,15 @@ document.addEventListener('DOMContentLoaded', function() {
         submitButton.addEventListener('click', checkAnswer);
 
 function logForTeam(team) {
-    console.log(`Point scored for the ${team} team.`);
-    feedbackElement.textContent = `Scored for ${team} team!`;
+        // Convert team name to lowercase to match Firestore document IDs
+    let teamLowerCase = team.toLowerCase();
 
-    // Reference to the team's score in Firestore
-    const teamScoreRef = db.collection('teams').doc(team);
+    console.log(`Point scored for the ${teamLowerCase} team.`);
+    feedbackElement.textContent = `Scored for ${teamLowerCase} team!`;
+
+    const teamScoreRef = db.collection('teams').doc(teamLowerCase);
+  
+    
 
     db.runTransaction((transaction) => {
         return transaction.get(teamScoreRef).then((teamScoreDoc) => {
