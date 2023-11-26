@@ -93,7 +93,7 @@ function generateQuestion() {
 }
 
     // Call updateScores here to populate initial scores
-    // updateScores();
+    updateScores();
       
         function checkAnswer() {
                 // Check if either of the options is selected
@@ -138,15 +138,13 @@ function generateQuestion() {
 
       
 function logForTeam(team) {
-        // Convert team name to lowercase to match Firestore document IDs
+    // Convert team name to lowercase to match Firestore document IDs
     let teamLowerCase = team.toLowerCase();
 
     console.log(`Point scored for the ${teamLowerCase} team.`);
     feedbackElement.textContent = `Scored for ${teamLowerCase} team!`;
 
     const teamScoreRef = db.collection('teams').doc(teamLowerCase);
-  
-    
 
     db.runTransaction((transaction) => {
         return transaction.get(teamScoreRef).then((teamScoreDoc) => {
@@ -164,14 +162,16 @@ function logForTeam(team) {
         });
     }).then((newScore) => {
         console.log(`New score for the ${team} team is ${newScore}`);
+        // Call updateScores and generateQuestion here after transaction completes
+        updateScores();
+        generateQuestion();
     }).catch((error) => {
         console.log("Transaction failed: ", error);
     });
 
+    // Clear the team options and feedback after transaction completes
     document.getElementById('team-options').style.display = 'none';
     feedbackElement.textContent = '';
-    updateScores();
-    generateQuestion();
 }
 
 
