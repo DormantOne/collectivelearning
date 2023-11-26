@@ -4,58 +4,60 @@
     <title>Score Bar</title>
     <style>
         body {
-            color: white; /* Set text color to white for the entire body */
-            background-color: #4b7a74; /* Added a background color for better visibility of white text */
+            color: white;
+            background-color: #4b7a74;
         }
 
         .score-bar-container {
-            width: 100%; /* Container width */
-            background-color: #eee; /* Background of the container */
-            border: 1px solid #000; /* Border around the container */
+            width: 100%;
+            background-color: #eee;
+            border: 1px solid #000;
             position: relative;
-            margin-bottom: 10px; /* Space for number line */
+            margin-bottom: 10px;
         }
 
         .score-bar {
-            height: 15px; /* Smaller height of the score bar */
-            background-color: blue; /* Color of the score bar */
-            width: 0%; /* Initial width of the score bar */
+            height: 15px;
+            background-color: blue;
+            width: 0%;
         }
 
         .number-line {
             position: relative;
             width: 100%;
-            height: 15px; /* Smaller height of the number line */
-            font-size: 8px; /* Smaller size of numbers */
-            line-height: 15px; /* Align numbers vertically */
-            text-align: right; /* Align the number to the right */
+            height: 15px;
+            font-size: 8px;
+            line-height: 15px;
+            text-align: right;
         }
 
         .score-display {
-            margin-top: 5px; /* Space above the score display */
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
         }
 
         .ensmarten-button {
             display: inline-block;
-            margin-top: 10px;
+            margin-left: 10px;
             padding: 5px 10px;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 5px;
-            text-decoration: none; /* Remove underline from links */
+            text-decoration: none;
             cursor: pointer;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow to create a raised effect */
-            transition: box-shadow 0.3s ease, transform 0.3s ease; /* Smooth transition for click effect */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
         }
 
         .ensmarten-button:hover {
-            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* Slightly larger shadow on hover */
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
         }
 
         .ensmarten-button:active {
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Smaller shadow when button is clicked */
-            transform: translateY(2px); /* Slight move down to mimic button press */
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            transform: translateY(2px);
         }
     </style>
 </head>
@@ -64,17 +66,17 @@
         <div class="score-bar" id="scoreBar"></div>
     </div>
     <div class="number-line">
-        100 <!-- Maximum score -->
+        100
     </div>
-    <div class="score-display" id="scoreDisplay"></div>
-    <a href="https://dormantone.github.io/collectivelearning/" target="_blank" class="ensmarten-button">Ensmarten</a>
+    <div class="score-display" id="scoreDisplay">
+        <span id="scoreText">Score: </span>
+        <a href="https://dormantone.github.io/collectivelearning/" target="_blank" class="ensmarten-button">Ensmarten</a>
+    </div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
 
     <script>
-        // Your Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAJsu36rCNyJG-d5RwGyhEK4P5N3LkXpBM",
             authDomain: "collectivelearning-b4bb4.firebaseapp.com",
@@ -85,17 +87,13 @@
             measurementId: "G-LFGTGKHTKJ"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-
-        // Get a Firestore instance
         const db = firebase.firestore();
 
         document.addEventListener('DOMContentLoaded', function() {
-            const maxScore = 100; // Set maximum score
+            const maxScore = 100;
             let totalScore = 0;
 
-            // Fetch total score from Firestore
             db.collection('teams').get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     totalScore += doc.data().score || 0;
@@ -108,10 +106,10 @@
         function updateScoreBar(score, maxScore) {
             let scorePercentage = (score / maxScore) * 100;
             let scoreBar = document.getElementById('scoreBar');
-            let scoreDisplay = document.getElementById('scoreDisplay');
+            let scoreText = document.getElementById('scoreText'); // Get the score text span
 
             scoreBar.style.width = scorePercentage + '%';
-            scoreDisplay.textContent = 'Score: ' + score;
+            scoreText.textContent = 'Score: ' + score; // Update only the text content
         }
     </script>
 </body>
