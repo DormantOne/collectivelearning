@@ -7,19 +7,69 @@
             width: 100%; /* Container width */
             background-color: #eee; /* Background of the container */
             border: 1px solid #000; /* Border around the container */
+            position: relative;
+            margin-bottom: 20px; /* Space for number line */
         }
 
         .score-bar {
             height: 20px; /* Height of the score bar */
-            background-color: #4CAF50; /* Color of the score bar */
+            background-color: blue; /* Color of the score bar (leader: blue) */
             width: 0%; /* Initial width of the score bar */
+        }
+
+        .tic {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background-color: #000;
+        }
+
+        .number-line {
+            position: relative;
+            width: 100%;
+            height: 20px; /* Height of the number line */
+            font-size: 10px; /* Size of numbers */
+            line-height: 20px; /* Align numbers vertically */
+            text-align: center;
+        }
+
+        .number {
+            position: absolute;
+            bottom: 0;
+        }
+
+        .score-display {
+            margin-top: 5px; /* Space above the score display */
+        }
+
+        .ensmarten-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none; /* Remove underline from links */
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <div class="score-bar-container">
         <div class="score-bar" id="scoreBar"></div>
+        <!-- Tic Marks -->
+        <div class="tic" style="left: 50%;"></div>
+        <div class="tic" style="right: 0;"></div>
     </div>
+    <div class="number-line">
+        <!-- Number Line Increments -->
+        <div class="number" style="left: 50%;">500</div>
+        <div class="number" style="right: 0%;">1000</div>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+    <a href="https://dormantone.github.io/collectivelearning/" target="_blank" class="ensmarten-button">Ensmarten</a>
 
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
@@ -28,9 +78,10 @@
             let scorePercentage = (score / maxScore) * 100;
 
             let scoreBar = document.getElementById('scoreBar');
+            let scoreDisplay = document.getElementById('scoreDisplay');
             scoreBar.style.width = scorePercentage + '%';
+            scoreDisplay.textContent = 'Score: ' + score;
         });
     </script>
 </body>
 </html>
-
