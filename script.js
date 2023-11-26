@@ -92,7 +92,9 @@ function generateQuestion() {
     feedbackElement.textContent = '';
 }
 
-
+    // Call updateScores here to populate initial scores
+    updateScores();
+      
         function checkAnswer() {
                 // Check if either of the options is selected
     if (!option1Radio.checked && !option2Radio.checked) {
