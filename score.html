@@ -1,46 +1,78 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Score Bar</title>
+    <title>Neural Network and Score Bar</title>
     <style>
         body {
             color: white;
             background-color: #4b7a74;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%; /* Adjusted for phone screens */
+            max-width: 500px; /* Maximum width */
+        }
+
+        .neural-network {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px; /* Increased from 2px to 3px */
+            width: 75px; /* Increased from 50px */
+            height: 75px; /* Increased from 50px */
+            margin-right: 15px; /* Increased from 10px */
+        }
+
+        .neuron {
+            width: 12px; /* Increased from 8px */
+            height: 12px; /* Increased from 8px */
+            border: 1.5px solid; /* Increased from 1px */
+            border-radius: 50%;
         }
 
         .score-bar-container {
-            width: 100%;
+            width: 100%; /* Adjusting width to account for the neural-network width */
             background-color: #eee;
             border: 1px solid #000;
-            position: relative;
-            margin-bottom: 10px;
+            margin: 10px 0;
         }
 
         .score-bar {
-            height: 15px;
+            height: 25px;
             background-color: blue;
             width: 0%;
         }
 
         .number-line {
             position: relative;
-            width: 100%;
-            height: 15px;
+            width: 100%; /* Adjusting width to account for the neural-network width */
             font-size: 8px;
             line-height: 15px;
             text-align: right;
         }
 
         .score-display {
-            margin-top: 5px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 5px;
         }
 
         .ensmarten-button {
             display: inline-block;
-            margin-left: 10px;
-            padding: 5px 10px;
+            margin-left: 15px; /* Increased from 10px */
+            padding: 7.5px 15px; /* Increased from 5px 10px */
+            font-size: 24px; /* Increased for better visibility */
             background-color: #4CAF50;
             color: white;
             border: none;
@@ -51,32 +83,39 @@
             transition: box-shadow 0.3s ease, transform 0.3s ease;
         }
 
-        .ensmarten-button:hover {
-            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
-        }
+            .ensmarten-button:hover {
+                box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+            }
 
-        .ensmarten-button:active {
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-            transform: translateY(2px);
-        }
+            .ensmarten-button:active {
+                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+                transform: translateY(2px);
+            }
+
+
     </style>
 </head>
 <body>
-    <div class="score-bar-container">
-        <div class="score-bar" id="scoreBar"></div>
-    </div>
-    <div class="number-line">
-        100
-    </div>
-    <div class="score-display" id="scoreDisplay">
-        <span id="scoreText">Score: </span>
-        <a href="https://dormantone.github.io/collectivelearning/" target="_blank" class="ensmarten-button">Ensmarten</a>
+    <div class="main-container">
+        <div class="score-bar-container">
+            <div class="score-bar" id="scoreBar"></div>
+        </div>
+        <div class="number-line">100</div>
+        <div class="score-display" id="scoreDisplay">
+            
+            <span id="scoreText">Score:</span>
+            <a href="https://dormantone.github.io/collectivelearning/" target="_blank" class="ensmarten-button">Ensmarten</a>
+            <div class="neural-network" id="network-container">
+                <!-- Neural network will be dynamically inserted here -->
+            </div>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
 
     <script>
+        // Firebase initialization and score bar script
         const firebaseConfig = {
             apiKey: "AIzaSyAJsu36rCNyJG-d5RwGyhEK4P5N3LkXpBM",
             authDomain: "collectivelearning-b4bb4.firebaseapp.com",
@@ -90,7 +129,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const maxScore = 100;
             let totalScore = 0;
 
@@ -106,11 +145,44 @@
         function updateScoreBar(score, maxScore) {
             let scorePercentage = (score / maxScore) * 100;
             let scoreBar = document.getElementById('scoreBar');
-            let scoreText = document.getElementById('scoreText'); // Get the score text span
+            let scoreText = document.getElementById('scoreText');
 
             scoreBar.style.width = scorePercentage + '%';
-            scoreText.textContent = 'Score: ' + score; // Update only the text content
+            scoreText.textContent = 'Score: ' + score;
         }
+    </script>
+
+    <script>
+        // Neural network script
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('network-container');
+            const gridSize = 3; // 3x3 grid
+            const neurons = [];
+            const spacing = 12; // Increase spacing for better visibility
+
+            // Create 3x3 grid of neurons
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    let neuron = document.createElement('div');
+                    neuron.classList.add('neuron');
+                    neuron.style.left = (i * spacing) + 'px';
+                    neuron.style.top = (j * spacing) + 'px';
+                    neuron.style.borderColor = Math.random() < 0.5 ? 'blue' : 'red';
+                    container.appendChild(neuron);
+                    neurons.push(neuron);
+                }
+            }
+
+            // Function to randomly change neuron colors
+            setInterval(function () {
+                neurons.forEach(neuron => {
+                    if (Math.random() < 0.5) {
+                        neuron.style.backgroundColor = neuron.style.borderColor;
+                        setTimeout(() => neuron.style.backgroundColor = 'transparent', 500);
+                    }
+                });
+            }, 1000); // Update every second
+        });
     </script>
 </body>
 </html>
