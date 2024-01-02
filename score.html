@@ -172,32 +172,85 @@
         // Neural network script
         document.addEventListener('DOMContentLoaded', function () {
             const container = document.getElementById('network-container');
-            const gridSize = 3; // 3x3 grid
+            const gridSize = 3;
             const neurons = [];
-            const spacing = 12; // Increase spacing for better visibility
+            const spacing = 16; // Adjusted spacing for the smaller grid
 
-            // Create 3x3 grid of neurons
+            function Neuron(x, y, id) {
+                this.id = id;
+                this.x = x * spacing;
+                this.y = y * spacing;
+                this.element = document.createElement('div');
+                this.element.classList.add('neuron');
+                this.element.style.left = this.x + 'px';
+                this.element.style.top = this.y + 'px';
+                this.isInhibitory = Math.random() < 0.5;
+                this.element.style.borderColor = this.isInhibitory ? 'blue' : 'red';
+                container.appendChild(this.element);
+
+                this.outputs = [];
+                this.fireRate = 1 / 5;  // Baseline firing rate
+                this.localTick = 0;
+
+                this.fire = function () {
+                    this.element.style.backgroundColor = this.isInhibitory ? 'blue' : 'red';
+                    setTimeout(() => this.element.style.backgroundColor = 'transparent', 200);
+                    this.outputs.forEach(output => output.receiveInput(this.isInhibitory));
+                };
+
+                this.update = function () {
+                    this.localTick++;
+                    if (this.localTick >= Math.ceil(5 / this.fireRate)) {
+                        this.fire();
+                        this.localTick = 0;
+                    }
+                };
+
+                this.receiveInput = function (isInhibitory) {
+                    if (isInhibitory) {
+                        this.fireRate = Math.max(this.fireRate - 1 / 5, 1 / 5);
+                    } else {
+                        this.fireRate = Math.min(this.fireRate + 1 / 5, 4 / 5);
+                    }
+                };
+            }
+
+            // Create neurons
             for (let i = 0; i < gridSize; i++) {
                 for (let j = 0; j < gridSize; j++) {
-                    let neuron = document.createElement('div');
-                    neuron.classList.add('neuron');
-                    neuron.style.left = (i * spacing) + 'px';
-                    neuron.style.top = (j * spacing) + 'px';
-                    neuron.style.borderColor = Math.random() < 0.5 ? 'blue' : 'red';
-                    container.appendChild(neuron);
-                    neurons.push(neuron);
+                    neurons.push(new Neuron(i, j, i * gridSize + j));
                 }
             }
 
-            // Function to randomly change neuron colors
+            // Connect each neuron to two others
+            neurons.forEach(neuron => {
+                let firstConnectionMade = false;
+                while (!firstConnectionMade) {
+                    const randomIndex = Math.floor(Math.random() * neurons.length);
+                    const randomNeuron = neurons[randomIndex];
+                    if (neuron !== randomNeuron && !neuron.outputs.includes(randomNeuron)) {
+                        neuron.outputs.push(randomNeuron);
+                        firstConnectionMade = true;
+                    }
+                }
+
+                let secondConnectionMade = false;
+                while (!secondConnectionMade) {
+                    const randomIndex = Math.floor(Math.random() * neurons.length);
+                    const randomNeuron = neurons[randomIndex];
+                    if (neuron !== randomNeuron && !neuron.outputs.includes(randomNeuron)) {
+                        neuron.outputs.push(randomNeuron);
+                        secondConnectionMade = true;
+                    }
+                }
+            });
+
+            // Update loop
             setInterval(function () {
                 neurons.forEach(neuron => {
-                    if (Math.random() < 0.5) {
-                        neuron.style.backgroundColor = neuron.style.borderColor;
-                        setTimeout(() => neuron.style.backgroundColor = 'transparent', 500);
-                    }
+                    neuron.update();
                 });
-            }, 1000); // Update every second
+            }, 300); // Update frequency adjusted for smoother animation
         });
     </script>
 </body>
