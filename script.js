@@ -16,12 +16,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         const result = await getConfig();
         const firebaseConfig = result.data;
 
-        // Re-initialize Firebase with the full config
-        firebase.initializeApp(firebaseConfig);
-
-        // Now you can use the full Firebase services
-        const db = firebase.firestore();
-
         // Fetch team names from button text
         const teamButtons = document.querySelectorAll('.team-button');
         const teamNames = Array.from(teamButtons).map(button => {
@@ -46,6 +40,31 @@ document.addEventListener('DOMContentLoaded', async function() {
             });
         });  
 
+        // Re-initialize Firebase with the full config
+        firebase.initializeApp(firebaseConfig);
+
+        // Now you can use the full Firebase services
+        const fullDb = firebase.firestore();
+
+        // Assuming you have a 'data.txt' file with quiz data
+        fetch('data.txt')
+            .then(response => response.text())
+            .then(text => {
+                const pairs = text.split('\n..\n').map(pair => pair.trim().split('\n').filter(line => line.trim() !== ''));
+                startQuiz(pairs);
+            });
+
+        function startQuiz(pairs) {
+            // Your startQuiz function implementation
+        }
+    } catch (error) {
+        console.error("Error fetching Firebase configuration:", error);
+    }
+});
+
+
+
+        
         // Assuming you have a 'data.txt' file with quiz data
         fetch('data.txt')
             .then(response => response.text())
