@@ -1,20 +1,26 @@
 document.addEventListener('DOMContentLoaded', async function() {
-    // Initialize Firebase with just the projectId
-    firebase.initializeApp({
-        projectId: "collectivelearning-b4bb4",
-    });
-
-    // Get a Firestore instance
-    const db = firebase.firestore();
-
-    // Get the Firebase Functions instance
-    const functions = firebase.functions();
-
     try {
+        // Initialize Firebase with just the projectId
+        firebase.initializeApp({
+            projectId: "collectivelearning-b4bb4",
+        });
+
+        // Get a Firestore instance
+        const db = firebase.firestore();
+
+        // Get the Firebase Functions instance
+        const functions = firebase.functions();
+
         // Call the getConfig function to fetch the Firebase config
         const getConfig = functions.httpsCallable('getConfig');
         const result = await getConfig();
         const firebaseConfig = result.data;
+
+        // Re-initialize Firebase with the full config
+        firebase.initializeApp(firebaseConfig);
+
+        // Now you can use the full Firebase services
+        const fullDb = firebase.firestore();
 
         // Fetch team names from button text
         const teamButtons = document.querySelectorAll('.team-button');
@@ -22,6 +28,40 @@ document.addEventListener('DOMContentLoaded', async function() {
             // Assuming button text is formatted like 'Red Team', 'White Team', etc.
             return button.textContent.trim().split(' ')[0].toLowerCase(); // Converts 'Red Team' to 'red'
         });
+
+        // Check and initialize Firestore data for each team
+        teamNames.forEach((teamName) => {
+            const teamScoreRef = db.collection('teams').doc(teamName);
+
+            teamScoreRef.get().then((doc) => {
+                if (!doc.exists || typeof doc.data().score === 'undefined') {
+                    console.log(`No data found for ${teamName}, initializing score to 0.`);
+                    return teamScoreRef.set({ score: 0 });
+                } else {
+                    console.log(`Data exists for ${teamName}, score is:`, doc.data().score);
+                    // Additional logic if data exists
+                }
+            }).catch((error) => {
+                console.error(`Error accessing Firestore for ${teamName}:`, error);
+            });
+        });  
+
+        // Assuming you have a 'data.txt' file with quiz data
+        fetch('data.txt')
+            .then(response => response.text())
+            .then(text => {
+                const pairs = text.split('\n..\n').map(pair => pair.trim().split('\n').filter(line => line.trim() !== ''));
+                startQuiz(pairs);
+            });
+
+        function startQuiz(pairs) {
+            // Your startQuiz function implementation
+        }
+    } catch (error) {
+        console.error("Error fetching Firebase configuration:", error);
+    }
+});
+
 
         // Check and initialize Firestore data for each team
         teamNames.forEach((teamName) => {
