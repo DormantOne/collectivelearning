@@ -17,7 +17,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         const firebaseConfig = result.data;
 
         // Re-initialize Firebase with the full config
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        } else {
+            firebase.app(); // if already initialized, use that one
+        }
 
         // Now you can use the full Firebase services
         const fullDb = firebase.firestore();
@@ -44,67 +48,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             }).catch((error) => {
                 console.error(`Error accessing Firestore for ${teamName}:`, error);
             });
-        });  
+        });
 
-        // Assuming you have a 'data.txt' file with quiz data
-        fetch('data.txt')
-            .then(response => response.text())
-            .then(text => {
-                const pairs = text.split('\n..\n').map(pair => pair.trim().split('\n').filter(line => line.trim() !== ''));
-                startQuiz(pairs);
-            });
-
-        function startQuiz(pairs) {
-            // Your startQuiz function implementation
-        }
-    } catch (error) {
-        console.error("Error fetching Firebase configuration:", error);
-    }
-});
-
-
-        // Check and initialize Firestore data for each team
-        teamNames.forEach((teamName) => {
-            const teamScoreRef = db.collection('teams').doc(teamName);
-
-            teamScoreRef.get().then((doc) => {
-                if (!doc.exists || typeof doc.data().score === 'undefined') {
-                    console.log(`No data found for ${teamName}, initializing score to 0.`);
-                    return teamScoreRef.set({ score: 0 });
-                } else {
-                    console.log(`Data exists for ${teamName}, score is:`, doc.data().score);
-                    // Additional logic if data exists
-                }
-            }).catch((error) => {
-                console.error(`Error accessing Firestore for ${teamName}:`, error);
-            });
-        });  
-
-        // Re-initialize Firebase with the full config
-        firebase.initializeApp(firebaseConfig);
-
-        // Now you can use the full Firebase services
-        const fullDb = firebase.firestore();
-
-        // Assuming you have a 'data.txt' file with quiz data
-        fetch('data.txt')
-            .then(response => response.text())
-            .then(text => {
-                const pairs = text.split('\n..\n').map(pair => pair.trim().split('\n').filter(line => line.trim() !== ''));
-                startQuiz(pairs);
-            });
-
-        function startQuiz(pairs) {
-            // Your startQuiz function implementation
-        }
-    } catch (error) {
-        console.error("Error fetching Firebase configuration:", error);
-    }
-});
-
-
-
-        
         // Assuming you have a 'data.txt' file with quiz data
         fetch('data.txt')
             .then(response => response.text())
