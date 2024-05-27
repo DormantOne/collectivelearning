@@ -73,34 +73,52 @@
         <a href="https://dormantone.github.io/collectivelearning/" target="_blank" class="ensmarten-button">Ensmarten</a>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-functions-compat.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAJsu36rCNyJG-d5RwGyhEK4P5N3LkXpBM",
-            authDomain: "collectivelearning-b4bb4.firebaseapp.com",
-            projectId: "collectivelearning-b4bb4",
-            storageBucket: "collectivelearning-b4bb4.appspot.com",
-            messagingSenderId: "9465764517",
-            appId: "1:9465764517:web:9d1cd2a4b8491a28cfcb4c",
-            measurementId: "G-LFGTGKHTKJ"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const maxScore = 100;
-            let totalScore = 0;
-
-            db.collection('teams').get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    totalScore += doc.data().score || 0;
-                });
-
-                updateScoreBar(totalScore, maxScore);
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize Firebase with just the projectId
+            firebase.initializeApp({
+                projectId: "collectivelearning-b4bb4",
             });
+
+            // Get a Firestore instance
+            const db = firebase.firestore();
+
+            // Get the Firebase Functions instance
+            const functions = firebase.functions();
+
+            try {
+                // Call the getConfig function to fetch the Firebase config
+                const getConfig = functions.httpsCallable('getConfig');
+                const result = await getConfig();
+                const firebaseConfig = result.data;
+
+                // Re-initialize Firebase with the full config if not already initialized
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                } else {
+                    firebase.app(); // if already initialized, use that one
+                }
+
+                // Now you can use the full Firebase services
+                const fullDb = firebase.firestore();
+
+                const maxScore = 100;
+                let totalScore = 0;
+
+                fullDb.collection('teams').get().then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        totalScore += doc.data().score || 0;
+                    });
+
+                    updateScoreBar(totalScore, maxScore);
+                });
+            } catch (error) {
+                console.error("Error fetching Firebase configuration:", error);
+            }
         });
 
         function updateScoreBar(score, maxScore) {
